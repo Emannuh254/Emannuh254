@@ -49,14 +49,14 @@
 </a>
 </td>
 <td align="center" width="33%">
-<a href="https://github.com/emannuh254/milk-collector">
-<img src="https://i.imgur.com/sOMEimg.png" width="200" alt="Milk Collector"/>
-<br /><b>Milk Collector System</b>
+<a href="https://emannuh254.github.io/login-page/index.html">
+<img src="https://www.shutterstock.com/image-illustration/robot-helmet-3d-rendered-robotic-600nw-187027727.jpg" width="200" alt="Bot Miner"/>
+<br /><b>Bots website </b>
 </a>
 </td>
 <td align="center" width="33%">
 <a href="https://github.com/emannuh254/cardillacship">
-<img src="https://i.imgur.com/sOMEimg2.png" width="200" alt="Car Project"/>
+<img src="https://i.imgur.com/sOMEimg" width="200" alt="Car Project"/>
 <br /><b>Cardillacship Project</b>
 </a>
 </td>
