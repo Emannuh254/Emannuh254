@@ -1,4 +1,4 @@
-=const express = require('express');
+const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
 
@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 6040;
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '65d5c39912mshd235d5dd1cfa074p103278jsn44431d37bc90';
 const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST || 'tiktok-video-no-watermark2.p.rapidapi.com';
 
+// ...rest of your code
 app.use(cors({ origin: '*' }));
 app.use(express.json());
 
