@@ -1,13 +1,16 @@
 import express from "express";
 import fetch from "node-fetch";
 import cors from "cors";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const RAPIDAPI_KEY = "65d5c39912mshd235d5dd1cfa074p103278jsn44431d37bc90";
-const RAPIDAPI_HOST = "tiktok-video-no-watermark2.p.rapidapi.com";
+const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
+const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST;
 
 app.post("/download", async (req, res) => {
   const { url } = req.body;
@@ -39,4 +42,5 @@ app.post("/download", async (req, res) => {
   }
 });
 
-app.listen(3000, () => console.log("✅ Server running on http://localhost:3000"));
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
