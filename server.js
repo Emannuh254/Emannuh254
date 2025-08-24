@@ -3,49 +3,54 @@ const axios = require('axios');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 6040;
-
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY || '65d5c39912mshd235d5dd1cfa074p103278jsn44431d37bc90';
-const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST || 'tiktok-video-no-watermark2.p.rapidapi.com';
-
-// ...rest of your code
-app.use(cors({ origin: '*' }));
+app.use(cors());
 app.use(express.json());
 
-// POST /download - stream TikTok video
+const PORT = process.env.PORT || 6040;
+
+// Function to expand short TikTok URLs (vm.tiktok.com)
+async function expandTikTokUrl(url) {
+  try {
+    const response = await axios.get(url, { maxRedirects: 0, validateStatus: null });
+    if (response.status === 301 || response.status === 302) {
+      return response.headers.location; // full video URL
+    }
+    return url; // already full URL
+  } catch (err) {
+    return url;
+  }
+}
+
 app.post('/download', async (req, res) => {
-  const { url } = req.body;
-  if (!url || typeof url !== 'string') return res.status(400).json({ error: 'Invalid URL' });
+  let { url } = req.body;
+
+  if (!url) return res.status(400).json({ error: 'No URL provided' });
 
   try {
-    // Step 1: Request RapidAPI to get TikTok video download URL
-    const apiRes = await axios.get('https://tiktok-video-no-watermark2.p.rapidapi.com/video/url', {
-      params: { url },
-      headers: {
-        'X-RapidAPI-Key': RAPIDAPI_KEY,
-        'X-RapidAPI-Host': RAPIDAPI_HOST
-      }
-    });
+    // Expand short TikTok links if needed
+    url = await expandTikTokUrl(url);
 
-    const videoUrl = apiRes.data && apiRes.data.video && apiRes.data.video.downloadAddr;
+    // Lookup TikTok video using TikMate API
+    const lookup = await axios.get(`https://api.tikmate.app/api/lookup?url=${encodeURIComponent(url)}`);
 
-    if (!videoUrl) return res.status(404).json({ error: 'Video not found or no download link' });
+    if (!lookup.data || !lookup.data.video_url) {
+      return res.status(400).json({ error: 'Could not fetch video URL. Make sure it is a valid TikTok video.' });
+    }
 
-    // Step 2: Stream video to client
-    const videoStream = await axios.get(videoUrl, { responseType: 'stream' });
+    const videoUrl = lookup.data.video_url;
+
+    // Fetch video as stream
+    const videoResponse = await axios.get(videoUrl, { responseType: 'stream' });
 
     res.setHeader('Content-Disposition', 'attachment; filename="tiktok_video.mp4"');
     res.setHeader('Content-Type', 'video/mp4');
 
-    videoStream.data.pipe(res);
+    videoResponse.data.pipe(res);
 
   } catch (err) {
     console.error('Error fetching TikTok video:', err.message);
-    res.status(500).json({ error: 'Failed to fetch video. Try again later.' });
+    res.status(500).json({ error: 'Failed to fetch video. Make sure the link is correct and public.' });
   }
 });
-
-// Health check
-app.get('/', (req, res) => res.send('TikTok Downloader API running!'));
 
 app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

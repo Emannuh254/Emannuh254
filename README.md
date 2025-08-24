@@ -43,13 +43,13 @@
 <table>
 <tr>
 <td align="center" width="33%">
-<a href="https://github.com/emannuh254/mannuh-portfolio">
-<img src="https://i.imgur.com/Z7MZC6Z.png" width="200" alt="Portfolio Thumbnail"/>
-<br /><b>Portfolio Website</b>
+<a href="https://emannuh254.github.io/Emannuh254/">
+<img src="https://img.freepik.com/premium-vector/social-media-icon-illustration-tiktok-tiktok-icon-vector-illustration_561158-2136.jpg?semt=ais_hybrid&w=740" width="200" alt="Tiktok Thumbnail"/>
+<br /><b>Tiktok Downloader</b>
 </a>
 </td>
 <td align="center" width="33%">
-<a href="https://emannuh254.github.io/login-page/index.html">
+<a href="https://emannuh254.github.io/Emannuh254/">
 <img src="https://www.shutterstock.com/image-illustration/robot-helmet-3d-rendered-robotic-600nw-187027727.jpg" width="200" alt="Bot Miner"/>
 <br /><b>Bots website </b>
 </a>
