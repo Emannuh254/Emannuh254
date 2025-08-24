@@ -1,46 +1,31 @@
-import express from "express";
-import fetch from "node-fetch";
-import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
+const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
 
 const app = express();
+const PORT = 5000;
+
 app.use(cors());
 app.use(express.json());
 
-const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
-const RAPIDAPI_HOST = "tiktok-video-no-watermark2.p.rapidapi.com";
-
-app.post("/download", async (req, res) => {
+// Endpoint to download TikTok video
+app.post('/download', async (req, res) => {
   const { url } = req.body;
-  if (!url) return res.status(400).json({ error: "URL is required" });
+  if (!url) return res.status(400).json({ error: 'No URL provided' });
 
   try {
-    const apiUrl = `https://${RAPIDAPI_HOST}/?url=${encodeURIComponent(url)}`;
-    const response = await fetch(apiUrl, {
-      method: "GET",
-      headers: {
-        "x-rapidapi-host": RAPIDAPI_HOST,
-        "x-rapidapi-key": RAPIDAPI_KEY,
-      },
-    });
+    // Use a free TikTok API (TikMate) to get download link
+    const apiRes = await axios.get(`https://api.tikmate.app/api/lookup?url=${encodeURIComponent(url)}`);
+    const data = apiRes.data;
 
-    const data = await response.json();
-
-    if (data && data.data && data.data.play) {
-      res.json({
-        video: data.data.play,
-        hd: data.data.hdplay || null,
-      });
+    if (data && data.video && data.video[0] && data.video[0].url_no_watermark) {
+      res.json({ downloadUrl: data.video[0].url_no_watermark });
     } else {
-      res.status(404).json({ error: "Failed to fetch video" });
+      res.status(500).json({ error: 'Failed to fetch video' });
     }
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));
