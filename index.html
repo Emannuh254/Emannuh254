@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>TikTok Downloader</title>
+<title>TikTok Video Downloader</title>
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial,sans-serif; }
+  * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
   body { background:#0d0d0d; color:#fff; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100vh; padding:20px; }
   h1 { font-size:2rem; margin-bottom:15px; color:#1db954; text-align:center; }
   .container { background:#1a1a1a; padding:20px; border-radius:12px; width:100%; max-width:400px; text-align:center; box-shadow:0 0 20px rgba(0,255,0,0.2); }
@@ -13,24 +13,33 @@
   button { width:100%; padding:12px; background:#1db954; border:none; border-radius:6px; color:#fff; font-size:1.1rem; cursor:pointer; transition:0.3s ease; }
   button:hover { background:#17a44c; }
   .loading { margin-top:10px; color:#ccc; display:none; }
+  .error { color:#ff4d4d; margin-top:10px; }
 </style>
 </head>
 <body>
-<h1>TikTok Downloader</h1>
+
+<h1>TikTok Video Downloader</h1>
 <div class="container">
   <input type="text" id="tiktok-url" placeholder="Paste TikTok link here..." />
   <button id="download-btn">Download Video</button>
   <div id="loading" class="loading">Fetching video...</div>
+  <div id="error" class="error"></div>
 </div>
 
 <script>
 const btn = document.getElementById('download-btn');
 const input = document.getElementById('tiktok-url');
 const loading = document.getElementById('loading');
+const errorDiv = document.getElementById('error');
 
 btn.addEventListener('click', async () => {
   const url = input.value.trim();
-  if (!url) { alert('Please paste a TikTok link.'); return; }
+  errorDiv.textContent = '';
+
+  if (!url) {
+    errorDiv.textContent = 'Please paste a TikTok link.';
+    return;
+  }
 
   loading.style.display = 'block';
 
@@ -45,24 +54,27 @@ btn.addEventListener('click', async () => {
 
     if (!res.ok) {
       const data = await res.json();
-      alert('Error: ' + (data.error || 'Failed to fetch video'));
+      errorDiv.textContent = data.error || 'Failed to fetch video.';
       return;
     }
 
-    // Get blob and trigger download
+    // Get video as blob and trigger download
     const blob = await res.blob();
-    const link = document.createElement('a');
-    link.href = window.URL.createObjectURL(blob);
-    link.download = 'tiktok_video.mp4';
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const a = document.createElement('a');
+    const downloadUrl = window.URL.createObjectURL(blob);
+    a.href = downloadUrl;
+    a.download = 'tiktok_video.mp4';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(downloadUrl);
 
   } catch (err) {
     loading.style.display = 'none';
-    alert('Error: ' + err.message);
+    errorDiv.textContent = 'Error: ' + err.message;
   }
 });
 </script>
+
 </body>
 </html>
