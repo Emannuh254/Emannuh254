@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 const RAPIDAPI_KEY = process.env.RAPIDAPI_KEY;
-const RAPIDAPI_HOST = process.env.RAPIDAPI_HOST;
+const RAPIDAPI_HOST = "tiktok-video-no-watermark2.p.rapidapi.com";
 
 app.post("/download", async (req, res) => {
   const { url } = req.body;
@@ -43,4 +43,4 @@ app.post("/download", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`✅ Server running on http://localhost:${PORT}`));
+app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
