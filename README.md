@@ -49,7 +49,7 @@
 </a>
 </td>
 <td align="center" width="33%">
-<a href="https://emannuh254.github.io/Emannuh254/">
+<a href="https://emannuh254.github.io/login-page/index.html">
 <img src="https://www.shutterstock.com/image-illustration/robot-helmet-3d-rendered-robotic-600nw-187027727.jpg" width="200" alt="Bot Miner"/>
 <br /><b>Bots website </b>
 </a>
